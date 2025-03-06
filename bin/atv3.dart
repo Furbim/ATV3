@@ -5,11 +5,25 @@ void main(List<String> arguments) {
   int option = 0;
   late int id;
   late double salario;
-  Empresa empresa = Empresa(1, "Thiago Tech");
 
-  while(option != 5){
 
-    print("Escolha o que você quer fazer: \n 1: Adicionar Funcionário \n 2:Aumento de salário");
+  print("Digite o Id da Empresa:");
+  String? input = stdin.readLineSync();
+
+  if (input != null && int.tryParse(input) != null) {
+    id = int.parse(input); 
+  } else {
+    print('Entrada inválida. Por favor, digite um número inteiro.');
+  }
+
+  print("Digite o nome da empresa:");
+  String? nome = stdin.readLineSync();
+
+  Empresa empresa = Empresa(id, nome);
+
+  while(option != 4){
+
+    print("Escolha o que você quer fazer: \n 1: Adicionar Funcionário \n 2:Aumento de salário \n 3:Listar Funcionários \n 4:Sair");
 
     String? escolha = stdin.readLineSync();
     if (escolha != null && int.tryParse(escolha) != null) {
@@ -35,7 +49,7 @@ void main(List<String> arguments) {
         print("Digite o cargo do funcionário:");
         String? cargo = stdin.readLineSync();
 
-        print("Digite o Id do funcionário:");
+        print("Digite o salário do funcionário:");
         input = stdin.readLineSync();
 
         if (input != null && double.tryParse(input) != null) {
@@ -48,18 +62,35 @@ void main(List<String> arguments) {
         empresa.adicionarFuncionario(fun);
       break;
       case 2:
-        print("Digite o Id do funcionário:");
+         print("Digite o Id do funcionário para aumentar o salário:");
         String? input = stdin.readLineSync();
-
         if (input != null && int.tryParse(input) != null) {
-          id = int.parse(input); 
+          id = int.parse(input);
         } else {
           print('Entrada inválida. Por favor, digite um número inteiro.');
+          continue;
         }
 
+        print("Digite o percentual de aumento (ex: 10 para 10%):");
+        input = stdin.readLineSync();
+        late double percentual;
+        if (input != null && double.tryParse(input) != null) {
+          percentual = double.parse(input);
+        } else {
+          print('Entrada inválida. Por favor, digite um número racional.');
+          continue;
+        }
 
-
-
+        empresa.aumentoFuncionario(id, percentual);
+      break;
+      case 3:
+        empresa.exibirFuncionarios();
+      break;
+      case 4:
+        print('Saindo...');
+      break;
+      default:
+        print('Opção inválida!');
       break;
     }
 
@@ -131,8 +162,14 @@ class Empresa {
   }
 
   void aumentoFuncionario(id,double percentual){
-    funcionarios.forEach((fun)=>
-    if())
+  for (var fun in funcionarios) {
+      if (fun.getId() == id) {
+        fun.aumento(percentual);
+        print("Aumento de $percentual% aplicado ao funcionário ${fun.getId()}.");
+        return;
+      }
+    }
+    print("Funcionário com ID $id não encontrado.");
   }
 
   void exibirFuncionarios() {
